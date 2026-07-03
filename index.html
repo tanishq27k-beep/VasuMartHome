@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VasuMart-Home</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #e9ecef;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* 🚀 1. SPLASH SCREEN (ओपनिंग स्क्रीन डिज़ाइन) */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+
+        /* कोड से बना हुआ लाल 'V' लोगो */
+        .splash-logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            animation: scaleUp 0.6s ease-out;
+        }
+
+        .splash-icon {
+            background: #e31e24;
+            color: white;
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 42px;
+            font-weight: 700;
+            box-shadow: 0 10px 20px rgba(227, 30, 36, 0.2);
+        }
+
+        .splash-text {
+            font-size: 46px;
+            font-weight: 700;
+            color: #002f6c;
+        }
+
+        .splash-text span {
+            color: #e31e24;
+        }
+
+        @keyframes scaleUp {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Mobile App Container */
+        .app-container {
+            width: 100%;
+            max-width: 414px; /* iPhone Max Width */
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            padding-bottom: 70px; /* Space for bottom nav */
+        }
+
+        /* App Header */
+        header {
+            background: #fff;
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-icon {
+            background: #e31e24; /* VasuMart Red */
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .brand-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #002f6c;
+        }
+
+        .brand-name span {
+            color: #e31e24;
+        }
+
+        .user-greeting {
+            font-size: 13px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Search Bar */
+        .search-container {
+            position: relative;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 12px 15px 12px 40px;
+            border: none;
+            border-radius: 12px;
+            background: #f1f3f5;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+
+        /* Promotional Banner */
+        .banner {
+            margin: 15px 20px;
+            background: linear-gradient(135deg, #002f6c, #0056b3);
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .banner h2 {
+            font-size: 18px;
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .banner p {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .banner-btn {
+            background: #fff;
+            color: #002f6c;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* JioMart Style Categories Section */
+        .categories-container {
+            padding: 0 20px;
+            margin-bottom: 25px;
+        }
+
+        .categories-scroll {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding: 5px 0 10px 0;
+            scrollbar-width: none;
+        }
+
+        .categories-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            min-width: 70px;
+            cursor: pointer;
+        }
+
+        .category-circle {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+            border: 1px solid #eee;
+            transition: transform 0.2s;
+        }
+
+        .category-card:active .category-circle {
+            transform: scale(0.92);
+            background-color: #fff5f5;
+            border-color: #e31e24;
+        }
+
+        .category-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: #444;
+            margin-top: 8px;
+            white-space: nowrap;
+        }
+
+        /* Section Titles */
+        .section-title {
+            padding: 0 20px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title a {
+            font-size: 12px;
+            color: #e31e24;
+            text-decoration: none;
+        }
+
+        /* Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            padding: 0 20px 20px 20px;
+        }
+
+        .product-card {
+            background: #fff;
+            border-radius: 15px;
+            padding: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            position: relative;
+        }
+
+        .product-img {
+            height: 100px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .product-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .product-weight {
+            font-size: 11px;
+            color: #888;
+            margin-bottom: 10px;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price {
+            font-size: 15px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .add-btn {
+            background: #fff;
+            color: #e31e24;
+            border: 1px solid #e31e24;
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .add-btn:active {
+            background: #e31e24;
+            color: #fff;
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 414px;
+            background: #fff;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: 1px solid #eee;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #888;
+            text-decoration: none;
+            font-size: 10px;
+            gap: 4px;
+        }
+
+        .nav-item.active {
+            color: #e31e24;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+        }
+
+        .trans {
+            background: transparent;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 🚀 2. SPLASH SCREEN (यह बिना किसी फोटो के डायरेक्ट चालू होगा) -->
+    <div id="splash-screen">
+        <div class="splash-logo-container">
+            <div class="splash-icon">V</div>
+            <div class="splash-text">Vasu<span>Mart</span></div>
+        </div>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <div class="app-container">
+        <!-- App Header -->
+        <header>
+            <div class="header-top">
+                <div class="brand">
+                    <div class="brand-icon">V</div>
+                    <div class="brand-name">Vasu<span>Mart</span></div>
+                </div>
+                
+                <div class="user-greeting">
+                    Hi, Vaibhav Kumawat
+                    <button class="trans" id="profile2" onclick="profile2()">
+                    <i class="fa-solid fa-circle-user"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="search-container">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="सर्च करें...">
+            </div>
+        </header>
+
+        <!-- Banner -->
+        <div class="banner">
+            <h2>Super Saver Deals!</h2>
+            <p>आपकी पसंदीदा चीज़ों पर भारी छूट</p>
+            <button class="banner-btn">अभी खरीदें</button>
+        </div>
+
+        <!-- JioMart Style Categories Section -->
+        <div class="categories-container">
+            <div class="section-title">
+                <span>कैटेगरी से खरीदें</span>
+            </div>
+            <div class="categories-scroll">
+                <div class="category-card">
+                    <div class="category-circle">🥦</div>
+                    <div class="category-label">सब्जियां</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-circle">🍎</div>
+                    <div class="category-label">ताज़ा फल</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-circle">🥛</div>
+                    <div class="category-label">डेयरी व दूध</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-circle">🌾</div>
+                    <div class="category-label">किराना व दालें</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-circle">🍪</div>
+                    <div class="category-label">स्नैक्स</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-circle">🧼</div>
+                    <div class="category-label">सफाई का सामान</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trending Products Section -->
+        <div class="section-title">
+            <span>आपके लिए खास</span>
+            <a href="#">See All</a>
+        </div>
+
+        <div id="products" class="product-grid">
+          </div>
+          
+          
+        <!-- Bottom Navigation Bar -->
+        <nav class="bottom-nav">
+            <button id="home" class="trans">
+                <a href="#" class="nav-item active">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Home</span>
+                </a>
+            </button>
+            <button id="category" class="trans" onclick="category()">
+                <a href="#" class="nav-item">
+                    <i class="fa-solid fa-border-all"></i>
+                    <span>Categories</span>
+                </a>
+            </button>
+            <button id="carta" class="trans" onclick="cart()">
+                <a  href="#" class="nav-item">
+                    <i  class="fa-solid fa-cart-shopping"></i>
+                    <span>Cart</span>
+                </a>
+            </button>
+            <button id="profile" class="trans" onclick="profile()">
+                <a href="#" class="nav-item">
+                    <i class="fa-solid fa-user"></i>
+                    <span>Profile</span>
+                </a>
+            </button>
+        </nav>
+    </div>
+
+    <!-- 🚀 3. JAVASCRIPT (ओपनिंग स्क्रीन को 2.5 सेकंड बाद गायब करने के लिए) -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                splash.style.opacity = '0';
+                setTimeout(() => splash.remove(), 500); // 0.5 सेकंड के एनीमेशन के बाद पूरी तरह हटा देगा
+            }, 2500); // 2.5 सेकंड तक लोगो दिखेगा
+        });
+    let products = document.getElementById("products");
+
+for (let i = 1; i <= 50; i++) {
+    products.innerHTML += `
+    <div class="product-card" id="product${i}">
+        <div class="product-img">
+            <img id="img${i}" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb" height="100">
+        </div>
+
+        <div id="title${i}" class="product-title">
+            ताज़ा आलू (Fresh Potato)
+        </div>
+
+        <div id="weight${i}" class="product-weight">
+            1 kg
+        </div>
+
+        <div class="price-row">
+            <span id="price${i}" class="price">₹35</span>
+            <button id="cart${i}" class="add-btn">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+        </div>
+    </div>`;
+}
+
+
+function category(){
+  window.location.href = "https://google.com";
+}
+
+function cart(){
+  window.location.href = "https://youtube.com";
+}
+function profile(){
+  window.location.href = "https://youtube.com";
+}
+function profile2(){
+  window.location.href = "https://youtube.com";
+}
+
+
+    </script>
+</body>
+                      </html>
