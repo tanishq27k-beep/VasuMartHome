@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VasuMart-Home</title>
+    <title>VasuMart - Premium App</title>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- FontAwesome Icons -->
@@ -23,7 +23,6 @@
             display: flex;
             justify-content: center;
         }
-
         /* 🚀 1. SPLASH SCREEN (ओपनिंग स्क्रीन डिज़ाइन) */
         #splash-screen {
             position: fixed;
@@ -76,7 +75,6 @@
             0% { transform: scale(0.8); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
         }
-
         /* Mobile App Container */
         .app-container {
             width: 100%;
@@ -85,8 +83,8 @@
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
             padding-bottom: 70px; /* Space for bottom nav */
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
 
         /* App Header */
@@ -203,61 +201,6 @@
             z-index: 2;
         }
 
-        /* JioMart Style Categories Section */
-        .categories-container {
-            padding: 0 20px;
-            margin-bottom: 25px;
-        }
-
-        .categories-scroll {
-            display: flex;
-            gap: 15px;
-            overflow-x: auto;
-            padding: 5px 0 10px 0;
-            scrollbar-width: none;
-        }
-
-        .categories-scroll::-webkit-scrollbar {
-            display: none;
-        }
-
-        .category-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            min-width: 70px;
-            cursor: pointer;
-        }
-
-        .category-circle {
-            width: 65px;
-            height: 65px;
-            border-radius: 50%;
-            background-color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 28px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
-            border: 1px solid #eee;
-            transition: transform 0.2s;
-        }
-
-        .category-card:active .category-circle {
-            transform: scale(0.92);
-            background-color: #fff5f5;
-            border-color: #e31e24;
-        }
-
-        .category-label {
-            font-size: 11px;
-            font-weight: 500;
-            color: #444;
-            margin-top: 8px;
-            white-space: nowrap;
-        }
-
         /* Section Titles */
         .section-title {
             padding: 0 20px;
@@ -290,6 +233,8 @@
             padding: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.03);
             position: relative;
+            cursor: pointer;
+            transition: transform 0.2s;
         }
 
         .product-img {
@@ -351,6 +296,15 @@
             color: #fff;
         }
 
+        /* No Results Message */
+        #no-results {
+            text-align: center;
+            padding: 30px 20px;
+            color: #666;
+            font-size: 14px;
+            display: none;
+        }
+
         /* Bottom Navigation Bar */
         .bottom-nav {
             position: fixed;
@@ -383,102 +337,226 @@
         .nav-item i {
             font-size: 20px;
         }
-
-        .trans {
+        
+        .trans{
             background: transparent;
             border: none;
             padding: 0;
             cursor: pointer;
             outline: none;
         }
+
+        /* JioMart Style Detail Page Setup */
+        .detail-page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            min-height: 100vh;
+            background: #f8f9fa;
+            z-index: 200;
+            padding-bottom: 80px;
+        }
+
+        .detail-header {
+            background: #fff;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            z-index: 210;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: none;
+            font-size: 20px;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .detail-header-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #002f6c;
+        }
+
+        .detail-main-img {
+            width: 100%;
+            height: 260px;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 100px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail-info-box {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .detail-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #222;
+            margin-bottom: 5px;
+        }
+
+        .detail-weight {
+            font-size: 14px;
+            color: #777;
+            margin-bottom: 15px;
+        }
+
+        .detail-price-row {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+        }
+
+        .detail-current-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .detail-mrp {
+            font-size: 15px;
+            color: #999;
+            text-decoration: line-through;
+        }
+
+        .detail-discount {
+            background: #e31e24;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .detail-desc-box {
+            background: #fff;
+            padding: 20px;
+        }
+
+        .desc-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #002f6c;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .desc-text {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .detail-footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 414px;
+            background: #fff;
+            padding: 12px 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 15px;
+            z-index: 220;
+        }
+
+        .footer-btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .btn-cart {
+            background: #fff;
+            color: #e31e24;
+            border: 1px solid #e31e24;
+        }
+
+        .btn-buy {
+            background: #e31e24;
+            color: #fff;
+        }
+
     </style>
 </head>
 <body>
-
-    <!-- 🚀 2. SPLASH SCREEN (यह बिना किसी फोटो के डायरेक्ट चालू होगा) -->
-    <div id="splash-screen">
+   <div id="splash-screen">
         <div class="splash-logo-container">
             <div class="splash-icon">V</div>
             <div class="splash-text">Vasu<span>Mart</span></div>
         </div>
-    </div>
+    </div>  
 
-    <!-- MAIN APP CONTAINER -->
     <div class="app-container">
-        <!-- App Header -->
-        <header>
-            <div class="header-top">
-                <div class="brand">
-                    <div class="brand-icon">V</div>
-                    <div class="brand-name">Vasu<span>Mart</span></div>
+        
+        <!-- ========================================== -->
+        <!-- MAIN HOME PAGE VIEW                        -->
+        <!-- ========================================== -->
+        <div id="home-view">
+            <!-- App Header -->
+            <header>
+                <div class="header-top">
+                    <div class="brand">
+                        <div class="brand-icon">V</div>
+                        <div class="brand-name">Vasu<span>Mart</span></div>
+                    </div>
+                    <div class="user-greeting">
+                        Hi, Vaibhav Kumawat
+                        <button onclick="profile2()" class="trans"><i class="fa-solid fa-circle-user"></i></button>
+                    </div>
                 </div>
                 
-                <div class="user-greeting">
-                    Hi, Vaibhav Kumawat
-                    <button class="trans" id="profile2" onclick="profile2()">
-                    <i class="fa-solid fa-circle-user"></i>
-                    </button>
+                <!-- Working Live Search Input Box -->
+                <div class="search-container">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="search-box" placeholder="सर्च करें..." onkeyup="searchProduct()">
                 </div>
-            </div>
-            
-            <div class="search-container">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" placeholder="सर्च करें...">
-            </div>
-        </header>
+            </header>
 
-        <!-- Banner -->
-        <div class="banner">
-            <h2>Super Saver Deals!</h2>
-            <p>आपकी पसंदीदा चीज़ों पर भारी छूट</p>
-            <button class="banner-btn">अभी खरीदें</button>
-        </div>
+            <!-- Banner -->
+            <div class="banner">
+                <h2>Super Saver Deals!</h2>
+                <p>आपकी पसंदीदा चीज़ों पर भारी छूट</p>
+                <button class="banner-btn">अभी खरीदें</button>
+            </div>
 
-        <!-- JioMart Style Categories Section -->
-        <div class="categories-container">
+            <!-- Trending Products Section -->
             <div class="section-title">
-                <span>कैटेगरी से खरीदें</span>
+                <span>आपके लिए खास</span>
+                <a href="#">See All</a>
             </div>
-            <div class="categories-scroll">
-                <div class="category-card">
-                    <div class="category-circle">🥦</div>
-                    <div class="category-label">सब्जियां</div>
-                </div>
-                <div class="category-card">
-                    <div class="category-circle">🍎</div>
-                    <div class="category-label">ताज़ा फल</div>
-                </div>
-                <div class="category-card">
-                    <div class="category-circle">🥛</div>
-                    <div class="category-label">डेयरी व दूध</div>
-                </div>
-                <div class="category-card">
-                    <div class="category-circle">🌾</div>
-                    <div class="category-label">किराना व दालें</div>
-                </div>
-                <div class="category-card">
-                    <div class="category-circle">🍪</div>
-                    <div class="category-label">स्नैक्स</div>
-                </div>
-                <div class="category-card">
-                    <div class="category-circle">🧼</div>
-                    <div class="category-label">सफाई का सामान</div>
-                </div>
+
+            <!-- Message when nothing matches search -->
+            <div id="no-results">
+                <i class="fa-solid fa-face-frown" style="font-size: 30px; margin-bottom: 10px; color: #888;"></i>
+                <p>माफ़ कीजिए, यह आइटम अभी VasuMart पर उपलब्ध नहीं है!</p>
             </div>
-        </div>
 
-        <!-- Trending Products Section -->
-        <div class="section-title">
-            <span>आपके लिए खास</span>
-            <a href="#">See All</a>
-        </div>
+            <!-- Product Grid -->
+            <div id="products" class="product-grid" id="main-product-grid"></div>
+            </div>
 
-        <div id="products" class="product-grid">
-          </div>
-          
-          
-        <!-- Bottom Navigation Bar -->
-        <nav class="bottom-nav">
+            <!-- Bottom Navigation Bar -->
+          <nav class="bottom-nav">
             <button id="home" class="trans">
                 <a href="#" class="nav-item active">
                     <i class="fa-solid fa-house"></i>
@@ -504,41 +582,142 @@
                 </a>
             </button>
         </nav>
-    </div>
+        </div>
 
-    <!-- 🚀 3. JAVASCRIPT (ओपनिंग स्क्रीन को 2.5 सेकंड बाद गायब करने के लिए) -->
+
+        <!-- ========================================== -->
+        <!-- FULL PRODUCT DETAIL VIEW TEMPLATE          -->
+        <!-- ========================================== -->
+        <div hidden="" id="productsd" class="detail-page">
+          
+        </div>
+
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT FOR LOGIC & LIVE SEARCH FILTER  -->
+    <!-- ========================================== -->
     <script>
-        window.addEventListener('DOMContentLoaded', () => {
+        // 1. LIVE SEARCH FUNCTION (नया फ़ीचर)
+        function searchProduct() {
+            let filter = document.getElementById('search-box').value.toUpperCase();
+            let grid = document.getElementById('products');
+            let cards = grid.getElementsByClassName('product-card');
+            let noResults = document.getElementById('no-results');
+            let matchedCount = 0;
+
+            for (let i = 0; i < cards.length; i++) {
+                let title = cards[i].getElementsByClassName('product-title')[0];
+                if (title) {
+                    let txtValue = title.textContent || title.innerText;
+                    // अगर नाम मैच करता है तो कार्ड दिखेगा, वरना छुप जाएगा
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        cards[i].style.display = "";
+                        matchedCount++;
+                    } else {
+                        cards[i].style.display = "none";
+                    }
+                }
+            }
+
+            // अगर कोई भी आइटम मैच न हो, तो 'No Results' मैसेज दिखाएं
+            if (matchedCount === 0) {
+                noResults.style.display = "block";
+            } else {
+                noResults.style.display = "none";
+            }
+        }
+
+        // 2. PRODUCT DETAIL VIEW OPEN LOGIC
+      for(let m=1;m<=50;m++){
+      window["openProduct"+m] = function(){
+        document.getElementById("productsd").style.display="block";
+        document.getElementById("prod"+m).style.display="block"; 
+        }
+      }
+            
+
+        // 3. CLOSE DETAIL VIEW
+        function closeProduct(){
+          document.getElementById("productsd").style.display="none";
+          document.querySelectorAll("#productsd .prd").forEach(el => el.style.display = "none");
+        }
+        
+        
+  window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
                 splash.style.opacity = '0';
                 setTimeout(() => splash.remove(), 500); // 0.5 सेकंड के एनीमेशन के बाद पूरी तरह हटा देगा
-            }, 2500); // 2.5 सेकंड तक लोगो दिखेगा
+            }, 500); // 2.5 सेकंड तक लोगो दिखेगा
         });
+        
     let products = document.getElementById("products");
 
 for (let i = 1; i <= 50; i++) {
     products.innerHTML += `
+  
     <div class="product-card" id="product${i}">
         <div class="product-img">
-            <img id="img${i}" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb" height="100">
+        <button class="trans" id="btn1" onclick="openProduct${i}()">
+            <img id="img${i}" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb" height="100px" width="150px">
+            </button>
         </div>
 
-        <div id="title${i}" class="product-title">
-            ताज़ा आलू (Fresh Potato)
-        </div>
+        <div id="title${i}" class="product-title">No Data
+          </div>
 
         <div id="weight${i}" class="product-weight">
-            1 kg
+            ...
         </div>
 
         <div class="price-row">
-            <span id="price${i}" class="price">₹35</span>
+            <span id="price${i}" class="price">...</span>
             <button id="cart${i}" class="add-btn">
                 <i class="fa-solid fa-plus"></i>
             </button>
         </div>
-    </div>`;
+    </div>
+  
+    `;
+}
+let productsd=document.getElementById("productsd");
+ 
+for(let k=1;k<=50;k++){
+  productsd.innerHTML +=
+         ` 
+         <div style="display:none;" class="prd" id="prod${k}" >
+            <div  class="detail-header">
+                <button class="back-btn" onclick="closeProduct()"><i class="fa-solid fa-arrow-left"></i></button>
+                <div class="detail-header-title" id="det-header-title">Product Details</div>
+                <button class="back-btn"><i class="fa-solid fa-share-nodes"></i></button>
+            </div>
+
+            <div class="detail-main-img" id="det-img">
+              <img id="imgd${k}" src="" height="260px">
+            </div>
+
+            <div class="detail-info-box">
+                <h1 id="titled${k}" class="detail-title" id="det-title">Product Name</h1>
+                <div class="detail-weight" id="weightd${k}">Net Weight: 500g</div>
+                
+                <div class="detail-price-row">
+                    <span id="priced${k}" class="detail-current-price" id="det-price">₹00</span>
+                    <span id="mrpd${k}" class="detail-mrp" id="det-mrp">MRP ₹00</span>
+                    <span id="discountd${k}" class="detail-discount" id="det-discount">0% OFF</span>
+                </div>
+            </div>
+
+            <div class="detail-desc-box">
+                <div class="desc-title">Product Information</div>
+                <p class="desc-text" id="detailed${k}">Product detailed information will appear here dynamically.</p>
+            </div>
+
+            <div class="detail-footer">
+                <button class="footer-btn btn-cart" id="cartd${k}">Add to Cart</button>
+                <button class="footer-btn btn-buy" id="buyd${k}">Buy Now</button>
+            </div>
+          </div>
+        `;
 }
 
 
@@ -555,8 +734,124 @@ function profile(){
 function profile2(){
   window.location.href = "https://tanishq27k-beep.github.io/VasuMart/";
 }
+</script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getDatabase, ref, set, get, push, update, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
+    // ---------- FIREBASE SETUP (mat chhedo) ----------
+    const firebaseConfig = {
+      apiKey: "AIzaSyCTWmzMsNF58HVkj6eVe0aAJPpkcBIeCUU",
+      authDomain: "myapps-79dd3.firebaseapp.com",
+      databaseURL: "https://myapps-79dd3-default-rtdb.firebaseio.com",
+      projectId: "myapps-79dd3",
+      storageBucket: "myapps-79dd3.firebasestorage.app",
+      messagingSenderId: "1032448815652",
+      appId: "1:1032448815652:web:513d4f24cef0ffba659eb1"
+    };
 
-    </script>
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // ---------- HELPER FUNCTIONS ----------
+
+    // Fixed path pe data save/overwrite
+    function saveData(path, value) {
+      set(ref(db, path), value)
+        .then(() => console.log("Saved ✔", path, value))
+        .catch((err) => console.log("ERROR:", err.message));
+    }
+
+    // Naya entry add (auto unique ID) — list jaisa data
+    function pushData(path, value) {
+      push(ref(db, path), value)
+        .then(() => console.log("Added ✔", path, value))
+        .catch((err) => console.log("ERROR:", err.message));
+    }
+
+    // Data ek baar padhna
+    function readData(path, callback) {
+      get(ref(db, path))
+        .then((snapshot) => callback(snapshot.val()))
+        .catch((err) => console.log("ERROR:", err.message));
+    }
+
+    // Data delete
+    function deleteData(path) {
+      remove(ref(db, path))
+        .then(() => console.log("Deleted ✔", path))
+        .catch((err) => console.log("ERROR:", err.message));
+    }
+
+    // Realtime listen — data change hote hi auto trigger
+    function listenData(path, callback) {
+      onValue(ref(db, path), (snapshot) => callback(snapshot.val()));
+    }
+
+    // ---------- BUTTONS ----------
+
+    // btn1 -> "bt" path pe value save karo
+     document.getElementById("buyd1").addEventListener("click", () => {
+      
+      saveData("cart1",100);
+    });
+    // ---------- OUTPUT: "ans" real-time update ----------
+  for(let j=1;j<=50;j++){
+      const title="title"+j;
+      const price="price"+j;
+      const img="img"+j;
+      const weight="weight"+j;
+      const cart="cart"+j;
+    listenData(title, (val) => {
+      document.getElementById(title).innerText = val;
+    });
+    
+    listenData(price, (val) => {
+      document.getElementById(price).innerText = val;
+    });
+    
+    listenData(img, (url) => {
+      document.getElementById(img).src = url || "";
+    });
+    
+    listenData(weight,(val) =>{
+      document.getElementById(weight).innerText=val;
+    });
+    
+    const titled="titled"+j;
+    const imgd="imgd"+j;
+    const weightd="weightd"+j;
+    const priced="priced"+j;
+    
+    const mrpd="mrpd"+j;
+    const discountd="discountd"+j;
+    const detailed="detailed"+j;
+    
+    listenData(title, (val) => {
+      document.getElementById(titled).innerText = val;
+    });
+    listenData(weight, (val) => {
+      document.getElementById(weightd).innerText = val;
+    });
+    listenData(price, (val) => {
+      document.getElementById(priced).innerText = val;
+    });
+    listenData(img, (url) => {
+      document.getElementById(imgd).src = url;
+    });
+  
+  
+   listenData(discountd, (val) => {
+      document.getElementById(discountd).innerText = val;
+    });
+    listenData(mrpd, (val) => {
+      document.getElementById(mrpd).innerText = val;
+    });
+    listenData(detailed, (val) => {
+      document.getElementById(detailed).innerText = val;
+    });
+  }
+  
+  </script>
 </body>
-                      </html>
+    </html>
