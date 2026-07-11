@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VasuMart - Complete Your Order</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #e9ecef;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        /* Mobile App Container matching original pattern */
+        .app-container {
+            width: 100%;
+            max-width: 414px; /* iPhone Max Width */
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+
+        /* App Header Style */
+        header {
+            background: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: none;
+            font-size: 18px;
+            color: #002f6c;
+            cursor: pointer;
+        }
+
+        .brand-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #002f6c;
+        }
+
+        .brand-name span {
+            color: #e31e24;
+        }
+
+        /* Order Box Card matching Control Group layout */
+        .order-card {
+            background: #fff;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border: 1px solid #eee;
+            margin-bottom: 20px;
+        }
+
+        .order-card h2 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f1f3f5;
+            padding-bottom: 10px;
+        }
+
+        /* Form Inputs Style */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 15px;
+            color: #888;
+            font-size: 14px;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+            background: #f8f9fa;
+            transition: 0.2s;
+        }
+
+        .input-wrapper input:focus {
+            border-color: #002f6c;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(0, 47, 108, 0.1);
+        }
+
+        /* Submit Button matching premium styling */
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #e31e24, #b91519);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(227, 30, 36, 0.2);
+            transition: 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+            box-shadow: none;
+        }
+
+        /* Pop-up / Modal Styling */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .popup-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .popup-box {
+            width: 85%;
+            max-width: 340px;
+            background: #fff;
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+
+        .popup-overlay.active .popup-box {
+            transform: scale(1);
+        }
+
+        .popup-icon {
+            width: 60px;
+            height: 60px;
+            background: #e6f7ed;
+            color: #28a745;
+            font-size: 28px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px auto;
+            animation: scaleUp 0.4s ease-out;
+        }
+
+        .popup-box h3 {
+            font-size: 18px;
+            color: #002f6c;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .popup-box p {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .popup-close-btn {
+            background: #002f6c;
+            color: #fff;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .popup-close-btn:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes scaleUp {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="appcot" class="app-container">
+        <!-- Header -->
+        <header>
+            <button onclick="window.history.back()" class="back-btn"><i class="fa-solid fa-chevron-left"></i></button>
+            <div class="brand-name">Vasu<span>Mart</span> Checkout</div>
+        </header>
+
+        <!-- Order Form Card -->
+        <div class="order-card">
+            <h2>Customer Information</h2>
+            
+            <form id="orderForm" onsubmit="handleOrderSubmit(event)">
+                <!-- Name Field -->
+                <div class="form-group">
+                    <label for="userName">Full Name</label>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-user"></i>
+                        <input type="text" id="userName" placeholder="Enter your full name" required>
+                    </div>
+                </div>
+
+                <!-- Phone Number Field -->
+                <div class="form-group">
+                    <label for="userPhone">Mobile Number</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-phone"></i>
+                        <input type="tel" id="userPhone" placeholder="Enter 10-digit mobile number" pattern="[0-9]{10}" required>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn">
+                    <i class="fa-solid fa-bag-shopping"></i> Place Order
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Popup / Modal Overlay -->
+    <div class="popup-overlay" id="orderPopup">
+        <div class="popup-box">
+            <div class="popup-icon">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h3>Order Placed!</h3>
+            <p>Thank you for shopping with us. Your order has been registered successfully!</p>
+            <button class="popup-close-btn" onclick="closePopup()">Continue Shopping</button>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic for Popup handling -->
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyTwZWrws-fZoIAbOtAlhgaeVhQomOiU68elG6Ql-PQSLdC3DM3icqo5ezfmzl3Dc65Tw/exec";
+
+    // ✅ CONNECTED: URL se productId nikaalo (jese ?productId=buy23)
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('productId') || 'unknown';
+
+    function handleOrderSubmit(event) {
+        event.preventDefault();
+
+        const name = document.getElementById("userName").value;
+        const phone = document.getElementById("userPhone").value;
+
+        const submitBtn = document.querySelector(".submit-btn");
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Placing Order...';
+
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({ name, phone, productId })
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("orderPopup").classList.add("active");
+        })
+        .catch(err => {
+            alert("Error placing order. Please try again.");
+        })
+        .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-solid fa-bag-shopping"></i> Place Order';
+        });
+    }
+
+    function closePopup() {
+        document.getElementById("orderPopup").classList.remove("active");
+        document.getElementById("orderForm").reset();
+        // Order ke baad wapas home bhej do
+        window.location.href = "index.html";
+    }
+</script>
+</body>
+</html>
