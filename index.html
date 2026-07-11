@@ -23,7 +23,7 @@
             display: flex;
             justify-content: center;
         }
-        /* 🚀 1. SPLASH SCREEN (ओपनिंग स्क्रीन डिज़ाइन) */
+        /* 🚀 1. SPLASH SCREEN (ओपनिंग स्क्रीन डिज़ाइन) */
         #splash-screen {
             position: fixed;
             top: 0;
@@ -335,7 +335,7 @@
         }
 
         .nav-item i {
-            font-size: 20px;
+            font-size: 30px;
         }
         
         .trans{
@@ -519,10 +519,7 @@
                         <div class="brand-icon">V</div>
                         <div class="brand-name">Vasu<span>Mart</span></div>
                     </div>
-                    <div class="user-greeting">
-                        Hi, Vaibhav Kumawat
-                        <button onclick="profile2()" class="trans"><i class="fa-solid fa-circle-user"></i></button>
-                    </div>
+
                 </div>
                 
                 <!-- Working Live Search Input Box -->
@@ -535,7 +532,7 @@
             <!-- Banner -->
             <div class="banner">
                 <h2>Super Saver Deals!</h2>
-                <p>आपकी पसंदीदा चीज़ों पर भारी छूट</p>
+                <p>आपकी पसंदीदा चीज़ों पर भारी छूट</p>
                 <button class="banner-btn">अभी खरीदें</button>
             </div>
 
@@ -563,24 +560,7 @@
                     <span>Home</span>
                 </a>
             </button>
-            <button id="category" class="trans" onclick="category()">
-                <a href="#" class="nav-item">
-                    <i class="fa-solid fa-border-all"></i>
-                    <span>Categories</span>
-                </a>
-            </button>
-            <button id="carta" class="trans" onclick="cart()">
-                <a  href="#" class="nav-item">
-                    <i  class="fa-solid fa-cart-shopping"></i>
-                    <span>Cart</span>
-                </a>
-            </button>
-            <button id="profile" class="trans" onclick="profile()">
-                <a href="#" class="nav-item">
-                    <i class="fa-solid fa-user"></i>
-                    <span>Profile</span>
-                </a>
-            </button>
+
         </nav>
         </div>
 
@@ -597,7 +577,7 @@
     <!-- JAVASCRIPT FOR LOGIC & LIVE SEARCH FILTER  -->
     <!-- ========================================== -->
     <script>
-        // 1. LIVE SEARCH FUNCTION (नया फ़ीचर)
+        // 1. LIVE SEARCH FUNCTION (नया फ़ीचर)
         function searchProduct() {
             let filter = document.getElementById('search-box').value.toUpperCase();
             let grid = document.getElementById('products');
@@ -672,9 +652,6 @@ for (let i = 1; i <= 50; i++) {
 
         <div class="price-row">
             <span id="price${i}" class="price">...</span>
-            <button id="cart${i}" class="add-btn">
-                <i class="fa-solid fa-plus"></i>
-            </button>
         </div>
     </div>
   
@@ -711,10 +688,20 @@ for(let k=1;k<=50;k++){
                 <div class="desc-title">Product Information</div>
                 <p class="desc-text" id="detailed${k}">Product detailed information will appear here dynamically.</p>
             </div>
+            <!-- VasuMart Pickup Address Box -->
+<div style="background: #fff; border: 1px solid #eee; border-left: 5px solid #e31e24; padding: 15px; margin: 15px 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.02);">
+    <h3 style="color: #002f6c; font-size: 15px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+        <i class="fa-solid fa-location-dot" style="color: #e31e24;"></i> यहाँ से सामान प्राप्त करें (Pickup Address)
+    </h3>
+    <p style="font-size: 12px; color: #555; line-height: 1.6; font-weight: 500;">
+        <strong>महेश कुमार कुमावत</strong><br>
+        दांतारामगढ़ बाईपास रोड, वार्ड नंबर-33, चैनपुरा रोड,<br>
+        किशंनगढ़ रेनवाल, जयपुर (राज.) - 303603
+    </p>
+</div>
 
             <div class="detail-footer">
-                <button class="footer-btn btn-cart" id="cartd${k}">Add to Cart</button>
-                <button class="footer-btn btn-buy" id="buyd${k}">Buy Now</button>
+                <button class="footer-btn btn-buy" id="buy${k}" onclick="buy(${k})">Buy Now</button>
             </div>
           </div>
         `;
@@ -731,8 +718,13 @@ function cart(){
 function profile(){
   window.location.href = "https://tanishq27k-beep.github.io/VasuMart/";
 }
-function profile2(){
+function b(){
   window.location.href = "https://tanishq27k-beep.github.io/VasuMart/";
+}
+
+// ✅ CONNECTED: buy button ab apna number (buy id) checkout page ko bhejta hai
+function buy(id){
+  window.location.href = "checkout.html?productId=buy" + id;
 }
 </script>
 <script type="module">
@@ -788,13 +780,6 @@ function profile2(){
       onValue(ref(db, path), (snapshot) => callback(snapshot.val()));
     }
 
-    // ---------- BUTTONS ----------
-
-    // btn1 -> "bt" path pe value save karo
-     document.getElementById("buyd1").addEventListener("click", () => {
-      
-      saveData("cart1",100);
-    });
     // ---------- OUTPUT: "ans" real-time update ----------
   for(let j=1;j<=50;j++){
       const title="title"+j;
@@ -854,4 +839,4 @@ function profile2(){
   
   </script>
 </body>
-    </html>
+</html>
