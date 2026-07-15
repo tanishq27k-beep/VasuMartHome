@@ -631,6 +631,7 @@
             }, 500); // 2.5 सेकंड तक लोगो दिखेगा
         });
         
+        
     let products = document.getElementById("products");
 
 for (let i = 1; i <= 50; i++) {
@@ -668,7 +669,7 @@ for(let k=1;k<=50;k++){
                 <div class="detail-header-title" id="det-header-title">Product Details</div>
                 <button class="back-btn"><i class="fa-solid fa-share-nodes"></i></button>
             </div>
-
+          
             <div class="detail-main-img" id="det-img">
               <img id="imgd${k}" src="" height="260px">
             </div>
@@ -699,6 +700,7 @@ for(let k=1;k<=50;k++){
         किशंनगढ़ रेनवाल, जयपुर (राज.) - 303603
     </p>
 </div>
+   
 
             <div class="detail-footer">
                 <button class="footer-btn btn-buy" id="buy${k}" onclick="buy(${k})">Buy Now</button>
@@ -726,6 +728,15 @@ function b(){
 function buy(id){
   window.location.href = "checkout.html?productId=buy" + id;
 }
+// 2. PRODUCT DETAIL VIEW OPEN LOGIC
+for(let m=1;m<=50;m++){
+  window["openProduct"+m] = function(){
+    document.getElementById("productsd").style.display="block";
+    document.getElementById("prod"+m).style.display="block"; 
+    window.scrollTo(0, 0);   // 👈 ye line add karo — detail page khud screen k samne (top pe) aa jayega
+  }
+}
+
 </script>
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
