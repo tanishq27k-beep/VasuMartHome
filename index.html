@@ -1,1 +1,847 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VasuMart - Premium App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background-color: #e9ecef;
+            display: flex;
+            justify-content: center;
+        }
+        #splash-screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100vh;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+        .splash-logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            animation: scaleUp 0.6s ease-out;
+        }
+        .splash-icon {
+            background: #e31e24;
+            color: white;
+            width: 70px; height: 70px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 42px;
+            font-weight: 700;
+            box-shadow: 0 10px 20px rgba(227, 30, 36, 0.2);
+        }
+        .splash-text { font-size: 46px; font-weight: 700; color: #002f6c; }
+        .splash-text span { color: #e31e24; }
+        @keyframes scaleUp { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+        /* LOGIN SCREEN */
+        #login-screen {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100vh;
+            background: #fff;
+            z-index: 9998;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }
+        #login-screen .login-icon {
+            background: #e31e24; color: white;
+            width: 60px; height: 60px;
+            border-radius: 16px;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 32px; font-weight: 700;
+            margin-bottom: 20px;
+        }
+        #login-screen h2 { color: #002f6c; font-size: 20px; margin-bottom: 6px; text-align: center; }
+        #login-screen p { color: #777; font-size: 13px; margin-bottom: 25px; text-align: center; }
+        #login-screen input {
+            width: 100%; max-width: 320px;
+            padding: 14px 15px;
+            border: 1px solid #eee;
+            background: #f1f3f5;
+            border-radius: 12px;
+            font-size: 14px;
+            margin-bottom: 14px;
+            outline: none;
+        }
+        #login-screen button {
+            width: 100%; max-width: 320px;
+            padding: 14px; border: none;
+            border-radius: 12px;
+            background: #e31e24; color: #fff;
+            font-size: 15px; font-weight: 600;
+            cursor: pointer;
+        }
+        #login-error { color: #e31e24; font-size: 12px; margin-top: -6px; margin-bottom: 10px; display: none; }
+
+        .app-container {
+            width: 100%;
+            max-width: 414px;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            padding-bottom: 70px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        header {
+            background: #fff;
+            padding: 15px 20px;
+            position: sticky; top: 0; z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .brand { display: flex; align-items: center; gap: 10px; }
+        .brand-icon {
+            background: #e31e24; color: white;
+            width: 35px; height: 35px;
+            border-radius: 10px;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 20px; font-weight: bold;
+        }
+        .brand-name { font-size: 22px; font-weight: 700; color: #002f6c; }
+        .brand-name span { color: #e31e24; }
+        .header-icons { display: flex; align-items: center; gap: 18px; }
+        .icon-btn {
+            position: relative;
+            background: transparent; border: none;
+            font-size: 21px; color: #002f6c;
+            cursor: pointer;
+        }
+        .cart-badge {
+            position: absolute; top: -6px; right: -8px;
+            background: #e31e24; color: #fff;
+            font-size: 10px; font-weight: 700;
+            min-width: 16px; height: 16px;
+            border-radius: 8px;
+            display: none; justify-content: center; align-items: center;
+            padding: 0 3px;
+        }
+        .search-container { position: relative; }
+        .search-container input {
+            width: 100%;
+            padding: 12px 15px 12px 40px;
+            border: none; border-radius: 12px;
+            background: #f1f3f5;
+            font-size: 14px; outline: none;
+        }
+        .search-container i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #888; }
+        .banner {
+            margin: 15px 20px;
+            background: linear-gradient(135deg, #002f6c, #0056b3);
+            border-radius: 15px; padding: 20px; color: white;
+            position: relative; overflow: hidden;
+        }
+        .banner h2 { font-size: 18px; margin-bottom: 5px; position: relative; z-index: 2; }
+        .banner p { font-size: 12px; opacity: 0.9; margin-bottom: 15px; position: relative; z-index: 2; }
+        .banner-btn {
+            background: #fff; color: #002f6c; border: none;
+            padding: 8px 15px; border-radius: 20px;
+            font-size: 12px; font-weight: 600; cursor: pointer;
+            position: relative; z-index: 2;
+        }
+        .section-title {
+            padding: 0 20px; font-size: 16px; font-weight: 700; color: #333;
+            margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .section-title a { font-size: 12px; color: #e31e24; text-decoration: none; }
+        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px 20px 20px; }
+        .product-card {
+            background: #fff; border-radius: 15px; padding: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            position: relative; cursor: pointer; transition: transform 0.2s;
+        }
+        .product-img {
+            height: 100px; background: #f8f9fa; border-radius: 10px;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 40px; margin-bottom: 10px;
+        }
+        .product-title {
+            font-size: 13px; font-weight: 600; color: #222; margin-bottom: 4px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .product-weight { font-size: 11px; color: #888; margin-bottom: 10px; }
+        .price-row { display: flex; justify-content: space-between; align-items: center; }
+        .price { font-size: 15px; font-weight: 700; color: #333; }
+        .add-btn {
+            background: #fff; color: #e31e24; border: 1px solid #e31e24;
+            width: 30px; height: 30px; border-radius: 8px;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 16px; cursor: pointer; transition: 0.25s;
+        }
+        .add-btn:active { background: #e31e24; color: #fff; }
+        #no-results { text-align: center; padding: 30px 20px; color: #666; font-size: 14px; display: none; }
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; max-width: 414px;
+            background: #fff; display: flex; justify-content: space-around;
+            padding: 12px 0; border-top: 1px solid #eee;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 100;
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #888; text-decoration: none; font-size: 10px; gap: 4px; }
+        .nav-item.active { color: #e31e24; }
+        .nav-item i { font-size: 30px; }
+        .trans { background: transparent; border: none; padding: 0; cursor: pointer; outline: none; }
+        .detail-page {
+            position: absolute; top: 0; left: 0; width: 100%; min-height: 100vh;
+            background: #f8f9fa; z-index: 200; padding-bottom: 80px;
+        }
+        .detail-header {
+            background: #fff; padding: 15px 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 210;
+        }
+        .back-btn { background: transparent; border: none; font-size: 20px; color: #333; cursor: pointer; }
+        .detail-header-title { font-size: 16px; font-weight: 600; color: #002f6c; }
+        .detail-main-img {
+            width: 100%; height: 260px; background: #fff;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 100px; border-bottom: 1px solid #eee;
+        }
+        .detail-info-box { background: #fff; padding: 20px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .detail-title { font-size: 20px; font-weight: 700; color: #222; margin-bottom: 5px; }
+        .detail-weight { font-size: 14px; color: #777; margin-bottom: 15px; }
+        .detail-price-row { display: flex; align-items: baseline; gap: 12px; }
+        .detail-current-price { font-size: 24px; font-weight: 700; color: #333; }
+        .detail-mrp { font-size: 15px; color: #999; text-decoration: line-through; }
+        .detail-discount { background: #e31e24; color: #fff; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
+        .detail-desc-box { background: #fff; padding: 20px; }
+        .desc-title { font-size: 15px; font-weight: 700; color: #002f6c; margin-bottom: 8px; text-transform: uppercase; }
+        .desc-text { font-size: 13px; color: #555; line-height: 1.6; }
+        .detail-footer {
+            position: fixed; bottom: 0; width: 100%; max-width: 414px;
+            background: #fff; padding: 12px 20px; border-top: 1px solid #eee;
+            display: flex; gap: 15px; z-index: 220;
+        }
+        .footer-btn { flex: 1; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; text-align: center; transition: all 0.25s ease; }
+        .btn-cart { background: #fff; color: #e31e24; border: 1px solid #e31e24; }
+        .btn-buy { background: #e31e24; color: #fff; }
+
+        /* ADD TO CART EFFECT */
+        .icon-btn.cart-bounce { animation: cartBounce 0.45s ease; }
+        @keyframes cartBounce {
+            0% { transform: scale(1); }
+            30% { transform: scale(1.35); }
+            60% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+        .add-btn.added-effect, .btn-cart.added-effect {
+            background: #28a745 !important;
+            border-color: #28a745 !important;
+            color: #fff !important;
+            transform: scale(1.08);
+        }
+
+        /* CART VIEW */
+        .cart-item {
+            background: #fff; border-radius: 12px; padding: 12px 15px;
+            margin: 0 20px 12px 20px; display: flex; align-items: center; gap: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+        .cart-item img { width: 55px; height: 55px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+        .cart-item-info { flex: 1; min-width: 0; }
+        .cart-item-name { font-size: 13px; font-weight: 600; color: #222; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .cart-item-price { font-size: 12px; color: #e31e24; font-weight: 700; margin-top: 3px; }
+        .qty-control { display: flex; align-items: center; border: 1px solid #eee; border-radius: 8px; overflow: hidden; }
+        .qty-control button { background: #f1f3f5; border: none; width: 26px; height: 26px; font-size: 14px; font-weight: 700; color: #e31e24; cursor: pointer; }
+        .qty-control span { width: 26px; text-align: center; font-size: 13px; font-weight: 600; }
+        .cart-remove { background: transparent; border: none; color: #aaa; font-size: 15px; cursor: pointer; }
+        #empty-cart, #no-orders { text-align: center; padding: 60px 20px; color: #888; }
+        #empty-cart i, #no-orders i { font-size: 40px; color: #ddd; margin-bottom: 12px; display: block; }
+        .cart-summary { margin: 15px 20px; background: #fff; border-radius: 12px; padding: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+        .cart-summary-row { display: flex; justify-content: space-between; font-size: 13px; color: #555; margin-bottom: 8px; }
+        .cart-summary-total { display: flex; justify-content: space-between; font-size: 15px; font-weight: 700; color: #222; border-top: 1px dashed #eee; padding-top: 8px; margin-top: 4px; }
+
+        /* PROFILE PAGE */
+        .profile-hero {
+            background: linear-gradient(135deg, #002f6c, #0056b3);
+            padding: 30px 20px 45px 20px;
+            display: flex; align-items: center; gap: 15px; color: #fff;
+        }
+        .profile-avatar {
+            width: 60px; height: 60px; border-radius: 50%;
+            background: #e31e24;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 26px; font-weight: 700; flex-shrink: 0;
+        }
+        .profile-name { font-size: 18px; font-weight: 700; }
+        .profile-phone { font-size: 13px; opacity: 0.85; margin-top: 3px; }
+
+        .wallet-card {
+            margin: -28px 20px 15px 20px;
+            background: #fff; border-radius: 15px; padding: 18px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            position: relative; z-index: 2;
+        }
+        .wallet-top { display: flex; justify-content: space-between; align-items: flex-start; }
+        .wallet-label { font-size: 11px; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .wallet-points { font-size: 56px; font-weight: 700; color: #002f6c; margin-top: 6px; line-height: 1; }
+        .wallet-points span { font-size: 15px; color: #002f6c; font-weight: 600; }
+        .wallet-icon { font-size: 30px; color: #e31e24; }
+        .wallet-loading { font-size: 11px; color: #aaa; margin-top: 6px; }
+
+        .profile-section {
+            margin: 0 20px 15px 20px; background: #fff; border-radius: 12px;
+            padding: 5px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+        .profile-section-title { font-size: 12px; font-weight: 700; color: #002f6c; text-transform: uppercase; padding: 12px 18px 6px 18px; }
+        .profile-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 18px; border-bottom: 1px solid #f1f3f5; font-size: 13px;
+        }
+        .profile-row:last-child { border-bottom: none; }
+        .profile-row span:first-child { color: #777; }
+        .profile-row span:last-child { color: #222; font-weight: 600; }
+        .wallet-note {
+            margin: 0 20px 20px 20px; font-size: 11.5px; color: #666; line-height: 1.7;
+            background: #fff; border-radius: 12px; padding: 14px 16px; border-left: 4px solid #002f6c;
+        }
+        .wallet-note b { color: #002f6c; }
+    </style>
+</head>
+<body>
+   <div id="splash-screen">
+        <div class="splash-logo-container">
+            <div class="splash-icon">V</div>
+            <div class="splash-text">Vasu<span>Mart</span></div>
+        </div>
+    </div>
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen">
+        <div class="login-icon">V</div>
+        <h2>VasuMart में आपका स्वागत है</h2>
+        <p>आगे बढ़ने के लिए अपना नाम और मोबाइल नंबर दर्ज करें</p>
+        <input type="text" id="login-name" placeholder="आपका नाम" maxlength="40">
+        <input type="tel" id="login-phone" placeholder="मोबाइल नंबर (10 अंक)" maxlength="10">
+        <div id="login-error">कृपया सही नाम और 10 अंकों का नंबर डालें</div>
+        <button onclick="submitLogin()">जारी रखें</button>
+    </div>
+
+    <div class="app-container">
+
+        <!-- HOME VIEW -->
+        <div id="home-view">
+            <header>
+                <div class="header-top">
+                    <div class="brand">
+                        <div class="brand-icon">V</div>
+                        <div class="brand-name">Vasu<span>Mart</span></div>
+                    </div>
+                    <div class="header-icons">
+                        <button class="icon-btn" onclick="openProfile()"><i class="fa-solid fa-user"></i></button>
+                        <button class="icon-btn" id="cart-icon-btn" onclick="openCart()">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                            <span class="cart-badge" id="cart-badge">0</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="search-container">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="search-box" placeholder="सर्च करें..." onkeyup="searchProduct()">
+                </div>
+            </header>
+
+            <div class="banner">
+                <h2>Super Saver Deals!</h2>
+                <p>आपकी पसंदीदा चीज़ों पर भारी छूट</p>
+                <button class="banner-btn">अभी खरीदें</button>
+            </div>
+
+            <div class="section-title">
+                <span>आपके लिए खास</span>
+                <a href="#">See All</a>
+            </div>
+
+            <div id="no-results">
+                <i class="fa-solid fa-face-frown" style="font-size: 30px; margin-bottom: 10px; color: #888;"></i>
+                <p>माफ़ कीजिए, यह आइटम अभी VasuMart पर उपलब्ध नहीं है!</p>
+            </div>
+
+            <div id="products" class="product-grid"></div>
+        </div>
+
+        <nav class="bottom-nav">
+            <button id="home" class="trans">
+                <a href="#" class="nav-item active">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Home</span>
+                </a>
+            </button>
+            <button class="trans" onclick="openCart()">
+                <a href="#" class="nav-item">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span>Cart</span>
+                </a>
+            </button>
+            <button class="trans" onclick="openProfile()">
+                <a href="#" class="nav-item">
+                    <i class="fa-solid fa-user"></i>
+                    <span>Profile</span>
+                </a>
+            </button>
+        </nav>
+
+        <!-- PRODUCT DETAIL VIEW -->
+        <div hidden="" id="productsd" class="detail-page"></div>
+
+        <!-- CART VIEW -->
+        <div hidden="" id="cart-view" class="detail-page">
+            <div class="detail-header">
+                <button class="back-btn" onclick="closeCart()"><i class="fa-solid fa-arrow-left"></i></button>
+                <div class="detail-header-title">My Cart</div>
+                <span style="width:20px;"></span>
+            </div>
+            <div id="cart-items" style="margin-top:15px;"></div>
+            <div id="empty-cart" style="display:none;">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <p>आपकी कार्ट खाली है</p>
+            </div>
+            <div class="cart-summary" id="cart-summary" style="display:none;">
+                <div class="cart-summary-row"><span>Items</span><span id="cart-summary-items">0</span></div>
+                <div class="cart-summary-total"><span>Total</span><span id="cart-summary-total">₹0</span></div>
+            </div>
+            <div class="detail-footer" id="cart-footer" style="display:none;">
+                <button class="footer-btn btn-buy" onclick="checkoutCart()">Checkout</button>
+            </div>
+        </div>
+
+        <!-- PROFILE VIEW -->
+        <div hidden="" id="profile-view" class="detail-page">
+            <div class="detail-header">
+                <button class="back-btn" onclick="closeProfile()"><i class="fa-solid fa-arrow-left"></i></button>
+                <div class="detail-header-title">My Profile</div>
+                <span style="width:20px;"></span>
+            </div>
+
+            <div class="profile-hero">
+                <div class="profile-avatar" id="profile-avatar">V</div>
+                <div>
+                    <div class="profile-name" id="profile-name">-</div>
+                    <div class="profile-phone" id="profile-phone">-</div>
+                </div>
+            </div>
+
+            <div class="wallet-card">
+                <div class="wallet-top">
+                    <div>
+                        <div class="wallet-label">VasuMart Wallet</div>
+                        <div class="wallet-points"><span id="wallet-points">0</span> <span>points</span></div>
+                        <div class="wallet-loading" id="wallet-status">Loading from Google Sheet...</div>
+                    </div>
+                    <div class="wallet-icon"><i class="fa-solid fa-wallet"></i></div>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <div class="profile-section-title">Account Details</div>
+                <div class="profile-row"><span>Name</span><span id="detail-name">-</span></div>
+                <div class="profile-row"><span>Mobile Number</span><span id="detail-phone">-</span></div>
+                <div class="profile-row"><span>Total Shopping (all time)</span><span id="detail-total-spent">₹0</span></div>
+            </div>
+
+            <div class="wallet-note">
+                <b>How points work:</b> You earn <b>10 points</b> for every <b>₹50</b> you shop with us.
+                <b>100 points = ₹10</b> usable wallet value. Points are calculated automatically from your total purchase amount.
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function searchProduct() {
+            let filter = document.getElementById('search-box').value.toUpperCase();
+            let grid = document.getElementById('products');
+            let cards = grid.getElementsByClassName('product-card');
+            let noResults = document.getElementById('no-results');
+            let matchedCount = 0;
+            for (let i = 0; i < cards.length; i++) {
+                let title = cards[i].getElementsByClassName('product-title')[0];
+                if (title) {
+                    let txtValue = title.textContent || title.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        cards[i].style.display = "";
+                        matchedCount++;
+                    } else {
+                        cards[i].style.display = "none";
+                    }
+                }
+            }
+            noResults.style.display = matchedCount === 0 ? "block" : "none";
+        }
+
+        for (let m = 1; m <= 50; m++) {
+            window["openProduct" + m] = function () {
+                document.getElementById("home-view").style.display = "none";
+                document.querySelector(".bottom-nav").style.display = "none";
+                document.getElementById("productsd").style.display = "block";
+                document.getElementById("prod" + m).style.display = "block";
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function closeProduct() {
+            document.getElementById("productsd").style.display = "none";
+            document.querySelectorAll("#productsd .prd").forEach(el => el.style.display = "none");
+            document.getElementById("home-view").style.display = "";
+            document.querySelector(".bottom-nav").style.display = "";
+            window.scrollTo(0, 0);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                splash.style.opacity = '0';
+                setTimeout(() => {
+                    splash.remove();
+                    checkLogin();
+                }, 500);
+            }, 500);
+        });
+
+        let products = document.getElementById("products");
+        for (let i = 1; i <= 50; i++) {
+            products.innerHTML += `
+    <div class="product-card" id="product${i}">
+        <div class="product-img">
+        <button class="trans" onclick="openProduct${i}()">
+            <img id="img${i}" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb" height="100px" width="150px">
+            </button>
+        </div>
+        <div id="title${i}" class="product-title">No Data</div>
+        <div id="weight${i}" class="product-weight">...</div>
+        <div class="price-row">
+            <span id="price${i}" class="price">...</span>
+            <button class="add-btn" onclick="addToCart(${i}, this)"><i class="fa-solid fa-plus"></i></button>
+        </div>
+    </div>`;
+        }
+
+        let productsd = document.getElementById("productsd");
+        for (let k = 1; k <= 50; k++) {
+            productsd.innerHTML += `
+         <div style="display:none;" class="prd" id="prod${k}" >
+            <div class="detail-header">
+                <button class="back-btn" onclick="closeProduct()"><i class="fa-solid fa-arrow-left"></i></button>
+                <div class="detail-header-title">Product Details</div>
+                <button class="back-btn"><i class="fa-solid fa-share-nodes"></i></button>
+            </div>
+            <div class="detail-main-img" id="det-img">
+              <img id="imgd${k}" src="" height="260px">
+            </div>
+            <div class="detail-info-box">
+                <h1 id="titled${k}" class="detail-title">Product Name</h1>
+                <div class="detail-weight" id="weightd${k}">Net Weight: 500g</div>
+                <div class="detail-price-row">
+                    <span id="priced${k}" class="detail-current-price">₹00</span>
+                    <span id="mrpd${k}" class="detail-mrp">MRP ₹00</span>
+                    <span id="discountd${k}" class="detail-discount">0% OFF</span>
+                </div>
+            </div>
+            <div class="detail-desc-box">
+                <div class="desc-title">Product Information</div>
+                <p class="desc-text" id="detailed${k}">Product detailed information will appear here dynamically.</p>
+            </div>
+<div style="background: #fff; border: 1px solid #eee; border-left: 5px solid #e31e24; padding: 15px; margin: 15px 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.02);">
+    <h3 style="color: #002f6c; font-size: 15px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+        <i class="fa-solid fa-location-dot" style="color: #e31e24;"></i> यहाँ से सामान प्राप्त करें (Pickup Address)
+    </h3>
+    <p style="font-size: 12px; color: #555; line-height: 1.6; font-weight: 500;">
+        <strong>महेश कुमार कुमावत</strong><br>
+        दांतारामगढ़ बाईपास रोड, वार्ड नंबर-33, चैनपुरा रोड,<br>
+        किशंनगढ़ रेनवाल, जयपुर (राज.) - 303603
+    </p>
+</div>
+            <div class="detail-footer">
+                <button class="footer-btn btn-cart" onclick="addToCart(${k}, this)">Add to Cart</button>
+                <button class="footer-btn btn-buy" id="buy${k}" onclick="buy(${k})">Buy Now</button>
+            </div>
+          </div>`;
+        }
+
+        function category() { window.location.href = "https://tanishq27k-beep.github.io/VMcatg/"; }
+        function buy(id) { window.location.href = "checkout.html?productId=buy" + id; }
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getDatabase, ref, set, get, push, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyCTWmzMsNF58HVkj6eVe0aAJPpkcBIeCUU",
+          authDomain: "myapps-79dd3.firebaseapp.com",
+          databaseURL: "https://myapps-79dd3-default-rtdb.firebaseio.com",
+          projectId: "myapps-79dd3",
+          storageBucket: "myapps-79dd3.firebasestorage.app",
+          messagingSenderId: "1032448815652",
+          appId: "1:1032448815652:web:513d4f24cef0ffba659eb1"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        function saveData(path, value) { set(ref(db, path), value).catch(err => console.log("ERROR:", err.message)); }
+        function readData(path, callback) { get(ref(db, path)).then(s => callback(s.val())).catch(err => console.log("ERROR:", err.message)); }
+        function deleteData(path) { remove(ref(db, path)).catch(err => console.log("ERROR:", err.message)); }
+        function listenData(path, callback) { onValue(ref(db, path), s => callback(s.val())); }
+
+        for (let j = 1; j <= 50; j++) {
+            const title = "title" + j, price = "price" + j, img = "img" + j, weight = "weight" + j;
+            listenData(title, v => document.getElementById(title).innerText = v);
+            listenData(price, v => document.getElementById(price).innerText = v);
+            listenData(img, v => document.getElementById(img).src = v || "");
+            listenData(weight, v => document.getElementById(weight).innerText = v);
+
+            const titled = "titled" + j, imgd = "imgd" + j, weightd = "weightd" + j, priced = "priced" + j;
+            const mrpd = "mrpd" + j, discountd = "discountd" + j, detailed = "detailed" + j;
+            listenData(title, v => document.getElementById(titled).innerText = v);
+            listenData(weight, v => document.getElementById(weightd).innerText = v);
+            listenData(price, v => document.getElementById(priced).innerText = v);
+            listenData(img, v => document.getElementById(imgd).src = v);
+            listenData(discountd, v => document.getElementById(discountd).innerText = v);
+            listenData(mrpd, v => document.getElementById(mrpd).innerText = v);
+            listenData(detailed, v => document.getElementById(detailed).innerText = v);
+        }
+
+        // ================= LOGIN (name + number, no Firebase Auth) =================
+        window.currentUser = JSON.parse(localStorage.getItem('vasuUser') || 'null');
+
+        window.checkLogin = function () {
+            if (window.currentUser && window.currentUser.phone) {
+                document.getElementById('login-screen').style.display = 'none';
+                afterLogin();
+            } else {
+                document.getElementById('login-screen').style.display = 'flex';
+            }
+        };
+
+        window.submitLogin = function () {
+            const name = document.getElementById('login-name').value.trim();
+            const phone = document.getElementById('login-phone').value.trim();
+            const err = document.getElementById('login-error');
+            if (name.length < 2 || !/^[0-9]{10}$/.test(phone)) {
+                err.style.display = 'block';
+                return;
+            }
+            err.style.display = 'none';
+            window.currentUser = { name, phone };
+            localStorage.setItem('vasuUser', JSON.stringify(window.currentUser));
+            saveData('users/' + phone + '/name', name);
+            saveData('users/' + phone + '/phone', phone);
+            saveData('users/' + phone + '/lastLogin', Date.now());
+            document.getElementById('login-screen').style.display = 'none';
+            afterLogin();
+        };
+
+        function afterLogin() {
+            document.getElementById('profile-name').innerText = window.currentUser.name;
+            document.getElementById('profile-phone').innerText = window.currentUser.phone;
+            document.getElementById('detail-name').innerText = window.currentUser.name;
+            document.getElementById('detail-phone').innerText = window.currentUser.phone;
+            document.getElementById('profile-avatar').innerText = window.currentUser.name.charAt(0).toUpperCase();
+            startCartListener();
+        }
+
+        // ================= CART — path: carts/<phone>/<productId> = qty =================
+        function cartPath(id = '') { return 'carts/' + window.currentUser.phone + (id ? '/' + id : ''); }
+
+        window.addToCart = function (id, btn) {
+            if (!window.currentUser) { document.getElementById('login-screen').style.display = 'flex'; return; }
+            readData(cartPath(id), existingQty => {
+                const qty = (existingQty || 0) + 1;
+                saveData(cartPath(id), qty);
+            });
+            if (btn) animateAddButton(btn);
+            bounceCartIcon();
+        };
+
+        function animateAddButton(btn) {
+            const original = btn.innerHTML;
+            btn.classList.add('added-effect');
+            btn.innerHTML = btn.classList.contains('add-btn') ? '<i class="fa-solid fa-check"></i>' : 'Added ✓';
+            setTimeout(() => {
+                btn.classList.remove('added-effect');
+                btn.innerHTML = original;
+            }, 900);
+        }
+
+        function bounceCartIcon() {
+            const icon = document.getElementById('cart-icon-btn');
+            icon.classList.add('cart-bounce');
+            setTimeout(() => icon.classList.remove('cart-bounce'), 450);
+        }
+
+        window.changeQty = function (id, delta) {
+            readData(cartPath(id), existingQty => {
+                let qty = (existingQty || 0) + delta;
+                if (qty <= 0) deleteData(cartPath(id));
+                else saveData(cartPath(id), qty);
+            });
+        };
+
+        window.removeFromCart = function (id) { deleteData(cartPath(id)); };
+
+        function startCartListener() {
+            listenData(cartPath(), cart => {
+                window.latestCart = cart || {};
+                renderCartBadge(window.latestCart);
+                if (!document.getElementById('cart-view').hidden) renderCartView(window.latestCart);
+            });
+        }
+
+        function renderCartBadge(cart) {
+            const count = Object.values(cart).reduce((s, q) => s + q, 0);
+            const badge = document.getElementById('cart-badge');
+            badge.innerText = count;
+            badge.style.display = count > 0 ? 'flex' : 'none';
+        }
+
+        function renderCartView(cart) {
+            const container = document.getElementById('cart-items');
+            const empty = document.getElementById('empty-cart');
+            const summary = document.getElementById('cart-summary');
+            const footer = document.getElementById('cart-footer');
+            const ids = Object.keys(cart);
+
+            if (ids.length === 0) {
+                container.innerHTML = '';
+                empty.style.display = 'block';
+                summary.style.display = 'none';
+                footer.style.display = 'none';
+                return;
+            }
+            empty.style.display = 'none';
+            summary.style.display = 'block';
+            footer.style.display = 'flex';
+
+            let total = 0, itemsCount = 0, html = '';
+            ids.forEach(id => {
+                const qty = cart[id];
+                const name = document.getElementById('title' + id) ? document.getElementById('title' + id).innerText : 'Product ' + id;
+                const priceText = document.getElementById('price' + id) ? document.getElementById('price' + id).innerText : '0';
+                const price = parseFloat((priceText.match(/[\d.]+/) || ['0'])[0]) || 0;
+                const imgSrc = document.getElementById('img' + id) ? document.getElementById('img' + id).src : '';
+                total += price * qty;
+                itemsCount += qty;
+                html += `
+          <div class="cart-item">
+            <img src="${imgSrc}">
+            <div class="cart-item-info">
+              <div class="cart-item-name">${name}</div>
+              <div class="cart-item-price">₹${price} x ${qty} = ₹${(price * qty).toFixed(0)}</div>
+            </div>
+            <div class="qty-control">
+              <button onclick="changeQty(${id}, -1)">-</button>
+              <span>${qty}</span>
+              <button onclick="changeQty(${id}, 1)">+</button>
+            </div>
+            <button class="cart-remove" onclick="removeFromCart(${id})"><i class="fa-solid fa-trash"></i></button>
+          </div>`;
+            });
+            container.innerHTML = html;
+            document.getElementById('cart-summary-items').innerText = itemsCount;
+            document.getElementById('cart-summary-total').innerText = '₹' + total.toFixed(0);
+        }
+
+        window.openCart = function () {
+            if (!window.currentUser) { document.getElementById('login-screen').style.display = 'flex'; return; }
+            document.getElementById('home-view').style.display = 'none';
+            document.querySelector('.bottom-nav').style.display = 'none';
+            document.getElementById('cart-view').hidden = false;
+            window.scrollTo(0, 0);
+            renderCartView(window.latestCart || {});
+        };
+        window.closeCart = function () {
+            document.getElementById('cart-view').hidden = true;
+            document.getElementById('home-view').style.display = '';
+            document.querySelector('.bottom-nav').style.display = '';
+            window.scrollTo(0, 0);
+        };
+        window.checkoutCart = function () {
+            deleteData(cartPath());
+            window.location.href = 'checkout.html?user=' + window.currentUser.phone;
+        };
+
+        // ================= PROFILE + WALLET (from Google Sheet) =================
+        // Sheet: column C (index 2) = phone number, column E (index 4) = amount
+        const SHEET_ID = '1HnHtNZA7B2lTWcR3ygGGSVhtgi3YftSPMbRakFRHNGk';
+        const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:csv';
+
+        function parseCSVRow(line) {
+            // simple CSV parser, handles quoted commas
+            const result = [];
+            let cur = '', inQuotes = false;
+            for (let i = 0; i < line.length; i++) {
+                const c = line[i];
+                if (c === '"') { inQuotes = !inQuotes; }
+                else if (c === ',' && !inQuotes) { result.push(cur); cur = ''; }
+                else { cur += c; }
+            }
+            result.push(cur);
+            return result.map(v => v.trim());
+        }
+
+        async function loadWallet() {
+            const statusEl = document.getElementById('wallet-status');
+            try {
+                const res = await fetch(SHEET_CSV_URL);
+                if (!res.ok) throw new Error('Sheet not accessible');
+                const text = await res.text();
+                const lines = text.trim().split('\n');
+                let total = 0;
+
+                lines.forEach(line => {
+                    const cols = parseCSVRow(line);
+                    const phone = (cols[2] || '').replace(/[^0-9]/g, '');
+                    const amount = parseFloat(cols[4]) || 0;
+                    if (phone === window.currentUser.phone) total += amount;
+                });
+
+                const points = Math.floor(total / 50) * 10;
+
+                document.getElementById('wallet-points').innerText = points;
+                document.getElementById('detail-total-spent').innerText = '₹' + total.toFixed(0);
+                statusEl.innerText = 'Updated just now';
+            } catch (e) {
+                statusEl.innerText = 'Could not load — check sheet sharing access';
+                console.log('Sheet fetch error:', e);
+            }
+        }
+
+        window.openProfile = function () {
+            if (!window.currentUser) { document.getElementById('login-screen').style.display = 'flex'; return; }
+            document.getElementById('home-view').style.display = 'none';
+            document.querySelector('.bottom-nav').style.display = 'none';
+            document.getElementById('profile-view').hidden = false;
+            window.scrollTo(0, 0);
+            loadWallet();
+        };
+        window.closeProfile = function () {
+            document.getElementById('profile-view').hidden = true;
+            document.getElementById('home-view').style.display = '';
+            document.querySelector('.bottom-nav').style.display = '';
+            window.scrollTo(0, 0);
+        };
+    </script>
+</body>
+</html>
 
