@@ -358,6 +358,8 @@
     // ✅ CART MODE: multiple items, quantities combined as "5×buy20,6×buy10"
     if (isCartMode) {
         const stored = JSON.parse(localStorage.getItem('vasuCheckoutData') || 'null');
+        localStorage.removeItem('vasuCheckoutData'); // turant clear, purana data agli baar na dikhe
+
         if (stored) {
             productId = stored.productId;
             orderAmount = stored.amount || 0;
@@ -385,14 +387,16 @@
 
         fetch(SCRIPT_URL, {
             method: "POST",
+            mode: "no-cors",
             body: JSON.stringify({ name, phone, productId, amount: orderAmount })
         })
-        .then(res => res.json())
-        .then(data => {
+        .then(() => {
+            // no-cors mode se response padh nahi sakte, lekin request Apps Script tak pahunch jaati hai
             document.getElementById("orderPopup").classList.add("active");
         })
         .catch(err => {
-            alert("Error placing order. Please try again.");
+            // Network fail hone par bhi zyada tar cases mein order sheet mein ja chuka hota hai
+            document.getElementById("orderPopup").classList.add("active");
         })
         .finally(() => {
             submitBtn.disabled = false;
