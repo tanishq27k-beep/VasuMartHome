@@ -608,7 +608,7 @@
             noResults.style.display = matchedCount === 0 ? "block" : "none";
         }
 
-        for (let m = 1; m <= 50; m++) {
+        for (let m = 1; m <= 100; m++) {
             window["openProduct" + m] = function () {
                 document.getElementById("home-view").style.display = "none";
                 document.querySelector(".bottom-nav").style.display = "none";
@@ -638,7 +638,7 @@
         });
 
         let products = document.getElementById("products");
-        for (let i = 1; i <= 50; i++) {
+        for (let i = 1; i <= 100; i++) {
             products.innerHTML += `
     <div class="product-card" id="product${i}">
         <div class="product-img">
@@ -656,7 +656,7 @@
         }
 
         let productsd = document.getElementById("productsd");
-        for (let k = 1; k <= 50; k++) {
+        for (let k = 1; k <= 100; k++) {
             productsd.innerHTML += `
          <div style="display:none;" class="prd" id="prod${k}" >
             <div class="detail-header">
@@ -727,7 +727,7 @@
         function deleteData(path) { remove(ref(db, path)).catch(err => console.log("ERROR:", err.message)); }
         function listenData(path, callback) { onValue(ref(db, path), s => callback(s.val())); }
 
-        for (let j = 1; j <= 50; j++) {
+        for (let j = 1; j <= 100; j++) {
             const title = "title" + j, price = "price" + j, img = "img" + j, weight = "weight" + j;
             listenData(title, v => document.getElementById(title).innerText = v);
             listenData(price, v => document.getElementById(price).innerText = v);
