@@ -317,6 +317,86 @@
             background: #fff; border-radius: 12px; padding: 14px 16px; border-left: 4px solid #002f6c;
         }
         .wallet-note b { color: #002f6c; }
+
+        .logout-btn {
+            margin: 0 20px 25px 20px;
+            width: calc(100% - 40px);
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid #e31e24;
+            background: #fff;
+            color: #e31e24;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .logout-btn:active { background: #e31e24; color: #fff; }
+
+        /* HELP / COMMENTS CHAT */
+        .help-list-item {
+            display: flex; align-items: center; gap: 12px;
+            background: #fff; margin: 0 20px 10px 20px;
+            padding: 12px 14px; border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            cursor: pointer;
+        }
+        .help-list-avatar {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: #002f6c; color: #fff;
+            display: flex; justify-content: center; align-items: center;
+            font-weight: 700; flex-shrink: 0;
+        }
+        .help-list-name { font-size: 13px; font-weight: 600; color: #222; }
+        .help-list-phone { font-size: 11px; color: #888; margin-top: 2px; }
+
+        .help-chat-body {
+            padding: 15px 15px 90px 15px;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .chat-bubble {
+            max-width: 75%;
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .chat-bubble.from-user {
+            align-self: flex-end;
+            background: #e31e24;
+            color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-bubble.from-admin {
+            align-self: flex-start;
+            background: #fff;
+            color: #222;
+            border: 1px solid #eee;
+            border-bottom-left-radius: 4px;
+        }
+        .chat-bubble .chat-time {
+            display: block; font-size: 10px; opacity: 0.7; margin-top: 4px;
+        }
+        #help-empty { text-align: center; padding: 60px 20px; color: #888; }
+        #help-empty i { font-size: 40px; color: #ddd; margin-bottom: 12px; display: block; }
+
+        .chat-input-bar {
+            position: fixed; bottom: 0; width: 100%; max-width: 414px;
+            background: #fff; border-top: 1px solid #eee;
+            padding: 10px 15px; display: flex; gap: 10px; z-index: 220;
+        }
+        .chat-input-bar input {
+            flex: 1; border: 1px solid #eee; background: #f1f3f5;
+            border-radius: 20px; padding: 10px 16px; font-size: 13px; outline: none;
+        }
+        .chat-input-bar button {
+            width: 42px; height: 42px; border-radius: 50%;
+            background: #e31e24; color: #fff; border: none;
+            font-size: 16px; cursor: pointer; flex-shrink: 0;
+        }
     </style>
 </head>
 <body>
@@ -349,6 +429,7 @@
                         <div class="brand-name">Vasu<span>Mart</span></div>
                     </div>
                     <div class="header-icons">
+                        <button class="icon-btn" onclick="openHelp()"><i class="fa-solid fa-comment-dots"></i></button>
                         <button class="icon-btn" onclick="openProfile()"><i class="fa-solid fa-user"></i></button>
                         <button class="icon-btn" id="cart-icon-btn" onclick="openCart()">
                             <i class="fa-solid fa-cart-shopping"></i>
@@ -398,6 +479,12 @@
                 <a href="#" class="nav-item">
                     <i class="fa-solid fa-user"></i>
                     <span>Profile</span>
+                </a>
+            </button>
+            <button class="trans" onclick="openHelp()">
+                <a href="#" class="nav-item">
+                    <i class="fa-solid fa-comment-dots"></i>
+                    <span>Help</span>
                 </a>
             </button>
         </nav>
@@ -463,6 +550,37 @@
             <div class="wallet-note">
                 <b>How points work:</b> You earn <b>10 points</b> for every <b>₹50</b> you shop with us.
                 <b>100 points = ₹10</b> usable wallet value. Points are calculated automatically from your total purchase amount.
+            </div>
+
+            <button class="logout-btn" onclick="logoutUser()">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </button>
+        </div>
+
+        <!-- HELP / COMMENTS VIEW -->
+        <div hidden="" id="help-view" class="detail-page">
+            <div class="detail-header">
+                <button class="back-btn" id="help-back-btn" onclick="closeHelp()"><i class="fa-solid fa-arrow-left"></i></button>
+                <div class="detail-header-title" id="help-header-title">Help & Support</div>
+                <span style="width:20px;"></span>
+            </div>
+
+            <!-- Admin: list of all users -->
+            <div id="help-list-wrap" style="display:none; margin-top:15px;">
+                <div id="help-list"></div>
+            </div>
+
+            <!-- Chat thread (used by both user and admin, when a thread is open) -->
+            <div id="help-chat-wrap" style="display:none;">
+                <div id="help-chat-body" class="help-chat-body"></div>
+                <div id="help-empty" style="display:none;">
+                    <i class="fa-solid fa-comment-dots"></i>
+                    <p>अपना सवाल या समस्या यहाँ लिखें, हम जल्द जवाब देंगे</p>
+                </div>
+                <div class="chat-input-bar">
+                    <input type="text" id="help-input" placeholder="Type your message...">
+                    <button onclick="sendHelpMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+                </div>
             </div>
         </div>
 
@@ -600,6 +718,7 @@
         const db = getDatabase(app);
 
         function saveData(path, value) { set(ref(db, path), value).catch(err => console.log("ERROR:", err.message)); }
+        function pushData(path, value) { push(ref(db, path), value).catch(err => console.log("ERROR:", err.message)); }
         function readData(path, callback) { get(ref(db, path)).then(s => callback(s.val())).catch(err => console.log("ERROR:", err.message)); }
         function deleteData(path) { remove(ref(db, path)).catch(err => console.log("ERROR:", err.message)); }
         function listenData(path, callback) { onValue(ref(db, path), s => callback(s.val())); }
@@ -841,7 +960,139 @@
             document.querySelector('.bottom-nav').style.display = '';
             window.scrollTo(0, 0);
         };
+
+        window.logoutUser = function () {
+            if (!confirm('Kya aap sach mein logout karna chahte hain?')) return;
+            localStorage.removeItem('vasuUser');
+            window.location.reload();
+        };
+
+        // ================= HELP / COMMENTS (user writes, admin replies) =================
+        // Apna number yahan daalo taaki tum admin ban jao aur sabki chats dekh/reply kar sako
+        const ADMIN_PHONE = '6375613235';
+
+        window.helpChatUnsub = null;
+        window.helpOpenPhone = null; // jis user ka thread abhi khula hai
+
+        window.openHelp = function () {
+            if (!window.currentUser) { document.getElementById('login-screen').style.display = 'flex'; return; }
+            document.getElementById('home-view').style.display = 'none';
+            document.querySelector('.bottom-nav').style.display = 'none';
+            document.getElementById('help-view').hidden = false;
+            window.scrollTo(0, 0);
+
+            if (window.currentUser.phone === ADMIN_PHONE) {
+                document.getElementById('help-header-title').innerText = 'All Conversations';
+                document.getElementById('help-list-wrap').style.display = 'block';
+                document.getElementById('help-chat-wrap').style.display = 'none';
+                loadAdminUserList();
+            } else {
+                document.getElementById('help-header-title').innerText = 'Help & Support';
+                document.getElementById('help-list-wrap').style.display = 'none';
+                document.getElementById('help-chat-wrap').style.display = 'block';
+                openHelpThread(window.currentUser.phone, window.currentUser.name);
+            }
+        };
+
+        window.closeHelp = function () {
+            // Admin: agar thread khula hai, pehle list pe wapas jao
+            if (window.currentUser.phone === ADMIN_PHONE && document.getElementById('help-chat-wrap').style.display === 'block') {
+                document.getElementById('help-chat-wrap').style.display = 'none';
+                document.getElementById('help-list-wrap').style.display = 'block';
+                document.getElementById('help-header-title').innerText = 'All Conversations';
+                if (window.helpChatUnsub) { window.helpChatUnsub(); window.helpChatUnsub = null; }
+                window.helpOpenPhone = null;
+                return;
+            }
+            if (window.helpChatUnsub) { window.helpChatUnsub(); window.helpChatUnsub = null; }
+            document.getElementById('help-view').hidden = true;
+            document.getElementById('home-view').style.display = '';
+            document.querySelector('.bottom-nav').style.display = '';
+            window.scrollTo(0, 0);
+        };
+
+        function loadAdminUserList() {
+            readData('users', usersObj => {
+                const list = document.getElementById('help-list');
+                list.innerHTML = '';
+                if (!usersObj) { list.innerHTML = '<div style="text-align:center;color:#888;padding:30px;">No users yet</div>'; return; }
+                Object.keys(usersObj).forEach(phone => {
+                    const u = usersObj[phone];
+                    const item = document.createElement('div');
+                    item.className = 'help-list-item';
+                    item.innerHTML = `
+                        <div class="help-list-avatar">${(u.name || '?').charAt(0).toUpperCase()}</div>
+                        <div>
+                            <div class="help-list-name">${u.name || phone}</div>
+                            <div class="help-list-phone">${phone}</div>
+                        </div>`;
+                    item.onclick = () => {
+                        document.getElementById('help-list-wrap').style.display = 'none';
+                        document.getElementById('help-chat-wrap').style.display = 'block';
+                        document.getElementById('help-header-title').innerText = u.name || phone;
+                        openHelpThread(phone, u.name || phone);
+                    };
+                    list.appendChild(item);
+                });
+            });
+        }
+
+        function openHelpThread(phone) {
+            window.helpOpenPhone = phone;
+            if (window.helpChatUnsub) { window.helpChatUnsub(); window.helpChatUnsub = null; }
+            const msgRef = ref(db, 'messages/' + phone);
+            window.helpChatUnsub = onValue(msgRef, snap => renderHelpChat(snap.val() || {}));
+        }
+
+        function renderHelpChat(msgsObj) {
+            const body = document.getElementById('help-chat-body');
+            const empty = document.getElementById('help-empty');
+            const keys = Object.keys(msgsObj).sort((a, b) => (msgsObj[a].time || 0) - (msgsObj[b].time || 0));
+
+            if (keys.length === 0) {
+                body.innerHTML = '';
+                empty.style.display = 'block';
+                return;
+            }
+            empty.style.display = 'none';
+
+            let html = '';
+            keys.forEach(k => {
+                const m = msgsObj[k];
+                const isUserMsg = m.sender === 'user';
+                const bubbleClass = isUserMsg ? 'from-user' : 'from-admin';
+                const timeStr = m.time ? new Date(m.time).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
+                html += `<div class="chat-bubble ${bubbleClass}">${escapeHtml(m.text)}<span class="chat-time">${isUserMsg ? 'You' : 'VasuMart Support'} · ${timeStr}</span></div>`;
+            });
+            body.innerHTML = html;
+            body.scrollTop = body.scrollHeight;
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.innerText = str;
+            return div.innerHTML;
+        }
+
+        window.sendHelpMessage = function () {
+            const input = document.getElementById('help-input');
+            const text = input.value.trim();
+            if (!text || !window.helpOpenPhone) return;
+
+            const isAdmin = window.currentUser.phone === ADMIN_PHONE;
+            pushData('messages/' + window.helpOpenPhone, {
+                text,
+                sender: isAdmin ? 'admin' : 'user',
+                time: Date.now()
+            });
+            input.value = '';
+        };
+
+        document.addEventListener('keypress', e => {
+            if (e.key === 'Enter' && document.activeElement && document.activeElement.id === 'help-input') {
+                sendHelpMessage();
+            }
+        });
     </script>
 </body>
 </html>
-
