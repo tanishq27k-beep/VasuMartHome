@@ -698,7 +698,11 @@
         }
 
         function category() { window.location.href = "https://tanishq27k-beep.github.io/VMcatg/"; }
-        function buy(id) { window.location.href = "checkout.html?productId=buy" + id; }
+        function buy(id) {
+            const priceText = document.getElementById('price' + id) ? document.getElementById('price' + id).innerText : '0';
+            const price = parseFloat((priceText.match(/[\d.]+/) || ['0'])[0]) || 0;
+            window.location.href = "checkout.html?productId=buy" + id + "&amount=" + price;
+        }
     </script>
 
     <script type="module">
@@ -896,8 +900,31 @@
             window.scrollTo(0, 0);
         };
         window.checkoutCart = function () {
+            const cart = window.latestCart || {};
+            const ids = Object.keys(cart);
+            if (ids.length === 0) return;
+
+            let orderParts = [];
+            let totalAmount = 0;
+
+            ids.forEach(id => {
+                const qty = cart[id];
+                const priceText = document.getElementById('price' + id) ? document.getElementById('price' + id).innerText : '0';
+                const price = parseFloat((priceText.match(/[\d.]+/) || ['0'])[0]) || 0;
+                orderParts.push(qty + '×buy' + id);
+                totalAmount += price * qty;
+            });
+
+            const orderData = {
+                productId: orderParts.join(','),
+                amount: totalAmount,
+                name: window.currentUser.name,
+                phone: window.currentUser.phone
+            };
+            localStorage.setItem('vasuCheckoutData', JSON.stringify(orderData));
+
             deleteData(cartPath());
-            window.location.href = 'checkout.html?user=' + window.currentUser.phone;
+            window.location.href = 'checkout.html?mode=cart';
         };
 
         // ================= PROFILE + WALLET (from Google Sheet) =================
