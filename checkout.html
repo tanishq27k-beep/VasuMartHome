@@ -68,6 +68,43 @@
             color: #e31e24;
         }
 
+        /* Order Summary Card (shown only in cart checkout mode) */
+        .order-summary-card {
+            background: #fff;
+            border-radius: 15px;
+            padding: 18px 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border: 1px solid #eee;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .order-summary-card h2 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .order-summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 6px;
+        }
+
+        .order-summary-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 15px;
+            font-weight: 700;
+            color: #222;
+            border-top: 1px dashed #eee;
+            padding-top: 8px;
+            margin-top: 6px;
+        }
+
         /* Order Box Card matching Control Group layout */
         .order-card {
             background: #fff;
@@ -251,6 +288,19 @@
             <div class="brand-name">Vasu<span>Mart</span> Checkout</div>
         </header>
 
+        <!-- Order Summary (visible only when coming from Cart) -->
+        <div class="order-summary-card" id="orderSummaryCard">
+            <h2>Order Summary</h2>
+            <div class="order-summary-row">
+                <span>Items</span>
+                <span id="summaryItems">-</span>
+            </div>
+            <div class="order-summary-total">
+                <span>Total Amount</span>
+                <span id="summaryTotal">₹0</span>
+            </div>
+        </div>
+
         <!-- Order Form Card -->
         <div class="order-card">
             <h2>Customer Information</h2>
@@ -298,9 +348,30 @@
 <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyTwZWrws-fZoIAbOtAlhgaeVhQomOiU68elG6Ql-PQSLdC3DM3icqo5ezfmzl3Dc65Tw/exec";
 
-    // ✅ CONNECTED: URL se productId nikaalo (jese ?productId=buy23)
+    // ✅ URL params (old single "Buy Now" flow): ?productId=buy23&amount=150
     const urlParams = new URLSearchParams(window.location.search);
-    const productId = urlParams.get('productId') || 'unknown';
+    const isCartMode = urlParams.get('mode') === 'cart';
+
+    let productId = urlParams.get('productId') || 'unknown';
+    let orderAmount = parseFloat(urlParams.get('amount')) || 0;
+
+    // ✅ CART MODE: multiple items, quantities combined as "5×buy20,6×buy10"
+    if (isCartMode) {
+        const stored = JSON.parse(localStorage.getItem('vasuCheckoutData') || 'null');
+        if (stored) {
+            productId = stored.productId;
+            orderAmount = stored.amount || 0;
+
+            // Prefill name/phone from VasuMart login
+            if (stored.name) document.getElementById('userName').value = stored.name;
+            if (stored.phone) document.getElementById('userPhone').value = stored.phone;
+
+            // Show order summary
+            document.getElementById('orderSummaryCard').style.display = 'block';
+            document.getElementById('summaryItems').innerText = stored.productId;
+            document.getElementById('summaryTotal').innerText = '₹' + orderAmount.toFixed(0);
+        }
+    }
 
     function handleOrderSubmit(event) {
         event.preventDefault();
@@ -314,7 +385,7 @@
 
         fetch(SCRIPT_URL, {
             method: "POST",
-            body: JSON.stringify({ name, phone, productId })
+            body: JSON.stringify({ name, phone, productId, amount: orderAmount })
         })
         .then(res => res.json())
         .then(data => {
@@ -332,6 +403,7 @@
     function closePopup() {
         document.getElementById("orderPopup").classList.remove("active");
         document.getElementById("orderForm").reset();
+        localStorage.removeItem('vasuCheckoutData');
         // Order ke baad wapas home bhej do
         window.location.href = "index.html";
     }
