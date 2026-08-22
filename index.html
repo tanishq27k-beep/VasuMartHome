@@ -172,6 +172,18 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.03);
             position: relative; cursor: pointer; transition: transform 0.2s;
         }
+        .product-number-tag {
+            position: absolute;
+            top: 8px; left: 8px;
+            background: #002f6c;
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            z-index: 2;
+        }
         .product-img {
             height: 100px; background: #f8f9fa; border-radius: 10px;
             display: flex; justify-content: center; align-items: center;
@@ -639,8 +651,10 @@
 
         let products = document.getElementById("products");
         for (let i = 1; i <= 100; i++) {
+            const paddedNum = String(i).padStart(2, '0');
             products.innerHTML += `
     <div class="product-card" id="product${i}">
+        <div class="product-number-tag">#${paddedNum}</div>
         <div class="product-img">
         <button class="trans" onclick="openProduct${i}()">
             <img id="img${i}" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb" height="100px" width="150px">
