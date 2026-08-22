@@ -138,6 +138,20 @@
             display: none; justify-content: center; align-items: center;
             padding: 0 3px;
         }
+        .notify-dot {
+            position: absolute;
+            top: -1px; right: -2px;
+            width: 10px; height: 10px;
+            background: #e31e24;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            display: none;
+        }
+        .help-list-item { position: relative; }
+        .help-list-item .notify-dot {
+            top: 10px; right: 10px;
+            width: 9px; height: 9px;
+        }
         .search-container { position: relative; }
         .search-container input {
             width: 100%;
@@ -441,7 +455,10 @@
                         <div class="brand-name">Vasu<span>Mart</span></div>
                     </div>
                     <div class="header-icons">
-                        <button class="icon-btn" onclick="openHelp()"><i class="fa-solid fa-comment-dots"></i></button>
+                        <button class="icon-btn" onclick="openHelp()">
+                            <i class="fa-solid fa-comment-dots"></i>
+                            <span class="notify-dot" id="help-dot-header"></span>
+                        </button>
                         <button class="icon-btn" onclick="openProfile()"><i class="fa-solid fa-user"></i></button>
                         <button class="icon-btn" id="cart-icon-btn" onclick="openCart()">
                             <i class="fa-solid fa-cart-shopping"></i>
@@ -494,8 +511,9 @@
                 </a>
             </button>
             <button class="trans" onclick="openHelp()">
-                <a href="#" class="nav-item">
+                <a href="#" class="nav-item" style="position:relative;">
                     <i class="fa-solid fa-comment-dots"></i>
+                    <span class="notify-dot" id="help-dot-nav" style="top:0; right:22%;"></span>
                     <span>Help</span>
                 </a>
             </button>
@@ -796,6 +814,7 @@
             document.getElementById('detail-phone').innerText = window.currentUser.phone;
             document.getElementById('profile-avatar').innerText = window.currentUser.name.charAt(0).toUpperCase();
             startCartListener();
+            startHelpNotifyListener();
         }
 
         // ================= CART — path: carts/<phone>/<productId> = qty =================
@@ -1031,6 +1050,8 @@
                 document.getElementById('help-header-title').innerText = 'Help & Support';
                 document.getElementById('help-list-wrap').style.display = 'none';
                 document.getElementById('help-chat-wrap').style.display = 'block';
+                localStorage.setItem('helpSeenUser_' + window.currentUser.phone, Date.now().toString());
+                updateHelpDot(false);
                 openHelpThread(window.currentUser.phone, window.currentUser.name);
             }
         };
@@ -1057,8 +1078,15 @@
                 const list = document.getElementById('help-list');
                 list.innerHTML = '';
                 if (!usersObj) { list.innerHTML = '<div style="text-align:center;color:#888;padding:30px;">No users yet</div>'; return; }
+                const seenMap = JSON.parse(localStorage.getItem('helpSeenAdmin') || '{}');
+                const allMsgs = window.latestMessagesAll || {};
+
                 Object.keys(usersObj).forEach(phone => {
                     const u = usersObj[phone];
+                    const msgs = allMsgs[phone] || {};
+                    const seenTime = seenMap[phone] || 0;
+                    const hasUnread = Object.values(msgs).some(m => m.sender === 'user' && (m.time || 0) > seenTime);
+
                     const item = document.createElement('div');
                     item.className = 'help-list-item';
                     item.innerHTML = `
@@ -1066,11 +1094,16 @@
                         <div>
                             <div class="help-list-name">${u.name || phone}</div>
                             <div class="help-list-phone">${phone}</div>
-                        </div>`;
+                        </div>
+                        <span class="notify-dot" style="${hasUnread ? 'display:block;' : ''}"></span>`;
                     item.onclick = () => {
                         document.getElementById('help-list-wrap').style.display = 'none';
                         document.getElementById('help-chat-wrap').style.display = 'block';
                         document.getElementById('help-header-title').innerText = u.name || phone;
+                        const seenMap2 = JSON.parse(localStorage.getItem('helpSeenAdmin') || '{}');
+                        seenMap2[phone] = Date.now();
+                        localStorage.setItem('helpSeenAdmin', JSON.stringify(seenMap2));
+                        updateHelpDot(false);
                         openHelpThread(phone, u.name || phone);
                     };
                     list.appendChild(item);
@@ -1134,6 +1167,49 @@
                 sendHelpMessage();
             }
         });
+
+        // ================= UNREAD MESSAGE RED DOT (user + admin) =================
+        function updateHelpDot(show) {
+            document.getElementById('help-dot-header').style.display = show ? 'block' : 'none';
+            document.getElementById('help-dot-nav').style.display = show ? 'block' : 'none';
+        }
+
+        function startHelpNotifyListener() {
+            const phone = window.currentUser.phone;
+
+            if (phone === ADMIN_PHONE) {
+                // Admin: poore 'messages' node ko suno, kisi bhi user ka naya reply aaya to dot dikhao
+                onValue(ref(db, 'messages'), snap => {
+                    const allMsgs = snap.val() || {};
+                    window.latestMessagesAll = allMsgs;
+                    const seenMap = JSON.parse(localStorage.getItem('helpSeenAdmin') || '{}');
+                    let anyUnread = false;
+
+                    Object.keys(allMsgs).forEach(ph => {
+                        const seenTime = seenMap[ph] || 0;
+                        const msgs = allMsgs[ph] || {};
+                        if (Object.values(msgs).some(m => m.sender === 'user' && (m.time || 0) > seenTime)) {
+                            anyUnread = true;
+                        }
+                    });
+
+                    updateHelpDot(anyUnread);
+
+                    // Agar admin list view khula hai, list ko refresh karo taaki per-user dot bhi update ho
+                    if (!document.getElementById('help-view').hidden && document.getElementById('help-list-wrap').style.display === 'block') {
+                        loadAdminUserList();
+                    }
+                });
+            } else {
+                // Normal user: apna thread suno, admin ka naya reply aaya to dot dikhao
+                onValue(ref(db, 'messages/' + phone), snap => {
+                    const msgs = snap.val() || {};
+                    const seenTime = parseInt(localStorage.getItem('helpSeenUser_' + phone) || '0');
+                    const hasUnread = Object.values(msgs).some(m => m.sender === 'admin' && (m.time || 0) > seenTime);
+                    updateHelpDot(hasUnread);
+                });
+            }
+        }
     </script>
 </body>
 </html>
