@@ -815,6 +815,21 @@
             document.getElementById('profile-avatar').innerText = window.currentUser.name.charAt(0).toUpperCase();
             startCartListener();
             startHelpNotifyListener();
+            requestNotifyPermission();
+        }
+
+        function requestNotifyPermission() {
+            if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission();
+            }
+        }
+
+        function showAppNotification(title, body) {
+            if (!('Notification' in window) || Notification.permission !== 'granted') return;
+            try {
+                const n = new Notification(title, { body: body || '', tag: 'vasumart-help' });
+                n.onclick = () => { window.focus(); };
+            } catch (e) { console.log('Notification error:', e); }
         }
 
         // ================= CART — path: carts/<phone>/<productId> = qty =================
@@ -1176,8 +1191,10 @@
 
         function startHelpNotifyListener() {
             const phone = window.currentUser.phone;
+            const listenerStartTime = Date.now(); // sirf isske baad aane wale messages pe hi notification aayega, purane pe nahi
 
             if (phone === ADMIN_PHONE) {
+                window.notifiedKeysAdmin = window.notifiedKeysAdmin || new Set();
                 // Admin: poore 'messages' node ko suno, kisi bhi user ka naya reply aaya to dot dikhao
                 onValue(ref(db, 'messages'), snap => {
                     const allMsgs = snap.val() || {};
@@ -1188,25 +1205,48 @@
                     Object.keys(allMsgs).forEach(ph => {
                         const seenTime = seenMap[ph] || 0;
                         const msgs = allMsgs[ph] || {};
-                        if (Object.values(msgs).some(m => m.sender === 'user' && (m.time || 0) > seenTime)) {
-                            anyUnread = true;
-                        }
+
+                        Object.entries(msgs).forEach(([key, m]) => {
+                            if (m.sender === 'user' && (m.time || 0) > seenTime) anyUnread = true;
+
+                            // Naya message aane par popup notification (sirf listener start hone ke baad wale)
+                            const dedupKey = ph + '_' + key;
+                            const isViewingThisThread = !document.getElementById('help-view').hidden &&
+                                document.getElementById('help-chat-wrap').style.display === 'block' &&
+                                window.helpOpenPhone === ph;
+
+                            if (m.sender === 'user' && (m.time || 0) > listenerStartTime &&
+                                !window.notifiedKeysAdmin.has(dedupKey) && !isViewingThisThread) {
+                                window.notifiedKeysAdmin.add(dedupKey);
+                                showAppNotification('VasuMart', m.text || 'Naya message aaya hai');
+                            }
+                        });
                     });
 
                     updateHelpDot(anyUnread);
 
-                    // Agar admin list view khula hai, list ko refresh karo taaki per-user dot bhi update ho
                     if (!document.getElementById('help-view').hidden && document.getElementById('help-list-wrap').style.display === 'block') {
                         loadAdminUserList();
                     }
                 });
             } else {
-                // Normal user: apna thread suno, admin ka naya reply aaya to dot dikhao
+                window.notifiedKeysUser = window.notifiedKeysUser || new Set();
+                // Normal user: apna thread suno, admin ka naya reply aaya to dot + notification dikhao
                 onValue(ref(db, 'messages/' + phone), snap => {
                     const msgs = snap.val() || {};
                     const seenTime = parseInt(localStorage.getItem('helpSeenUser_' + phone) || '0');
                     const hasUnread = Object.values(msgs).some(m => m.sender === 'admin' && (m.time || 0) > seenTime);
                     updateHelpDot(hasUnread);
+
+                    const isViewingHelp = !document.getElementById('help-view').hidden;
+
+                    Object.entries(msgs).forEach(([key, m]) => {
+                        if (m.sender === 'admin' && (m.time || 0) > listenerStartTime &&
+                            !window.notifiedKeysUser.has(key) && !isViewingHelp) {
+                            window.notifiedKeysUser.add(key);
+                            showAppNotification('VasuMart', m.text || 'Aapke message ka reply aaya hai');
+                        }
+                    });
                 });
             }
         }
