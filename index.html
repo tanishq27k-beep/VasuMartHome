@@ -740,6 +740,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getDatabase, ref, set, get, push, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+        import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyCTWmzMsNF58HVkj6eVe0aAJPpkcBIeCUU",
@@ -752,6 +753,10 @@
         };
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
+        const messaging = getMessaging(app);
+
+        // 🔑 Firebase Console → Project Settings → Cloud Messaging → Web Push certificates se generate karo
+        const VAPID_KEY = 'BAoIVH8axAmD7-mGX5AoeKI33wu_4iUhdqpNl03zkUTWfSyTvickfEBRlzq1e_DjpkjGRkGla8IVrpl3deHKb98';
 
         function saveData(path, value) { set(ref(db, path), value).catch(err => console.log("ERROR:", err.message)); }
         function pushData(path, value) { push(ref(db, path), value).catch(err => console.log("ERROR:", err.message)); }
@@ -818,11 +823,35 @@
             requestNotifyPermission();
         }
 
-        function requestNotifyPermission() {
-            if ('Notification' in window && Notification.permission === 'default') {
-                Notification.requestPermission();
+        async function requestNotifyPermission() {
+            if (!('Notification' in window) || !('serviceWorker' in navigator)) return;
+            try {
+                let permission = Notification.permission;
+                if (permission === 'default') {
+                    permission = await Notification.requestPermission();
+                }
+                if (permission !== 'granted') return;
+
+                const registration = await navigator.serviceWorker.register('firebase-messaging-sw.js');
+                const token = await getToken(messaging, {
+                    vapidKey: VAPID_KEY,
+                    serviceWorkerRegistration: registration
+                });
+
+                if (token) {
+                    saveData('fcmTokens/' + window.currentUser.phone, token);
+                }
+            } catch (e) {
+                console.log('FCM token error:', e);
             }
         }
+
+        // App khula hone par (foreground) aane wale push messages ko bhi dikhao
+        onMessage(messaging, payload => {
+            const title = (payload.notification && payload.notification.title) || 'VasuMart';
+            const body = (payload.notification && payload.notification.body) || '';
+            showAppNotification(title, body);
+        });
 
         function showAppNotification(title, body) {
             if (!('Notification' in window) || Notification.permission !== 'granted') return;
